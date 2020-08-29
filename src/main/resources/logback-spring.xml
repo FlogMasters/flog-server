@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <include resource="org/springframework/boot/logging/logback/defaults.xml" />
+    <include resource="org/springframework/boot/logging/logback/console-appender.xml" />
+    <include resource="org/springframework/boot/logging/logback/file-appender.xml" />
+
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="net.logstash.logback.encoder.LogstashEncoder"/>
+    </appender>
+
+    <logger name="LOGSTASH_LOG" additivity="false">
+        <appender-ref ref="CONSOLE" />
+    </logger>
+
+<!--    <logger name="ch.qos.logback" level="off"/>-->
+<!--    <logger name="org.springframework" level="off" additivity="false"/>-->
+<!--    <logger name="org.apache.catalina" level="off" additivity="false"/>-->
+<!--    <logger name="tomcat" level="off" additivity="false"/>-->
+<!--    <logger name="io.sentry" level="off" additivity="false"/>-->
+<!--    <logger name="org.hibernate" level="off" additivity="false"/>-->
+<!--    <logger name="com.zaxxer.hikari" level="off" additivity="false"/>-->
+<!--    <logger name="io.netty" level="off" additivity="false"/>-->
+<!--    <logger name="org.jboss" level="off" additivity="false"/>-->
+<!--    <logger name="springfox.documentation" level="off" additivity="false" />-->
+
+    <springProfile name="local">
+        <root level="DEBUG">
+            <appender-ref ref="CONSOLE" />
+        </root>
+    </springProfile>
+    <springProfile name="dev">
+        <root level="DEBUG">
+            <appender-ref ref="CONSOLE" />
+        </root>
+    </springProfile>
+    <springProfile name="stage">
+        <root level="debug">
+            <appender-ref ref="CONSOLE" />
+        </root>
+    </springProfile>
+    <springProfile name="production">
+        <root level="INFO">
+            <appender-ref ref="CONSOLE" />
+        </root>
+    </springProfile>
+</configuration>
