@@ -20,7 +20,7 @@ spec:
         - name: gcr-io-registry
       containers:
         - name: flog-production
-          image: gcr.io/flogmasters/flog_server:latest
+          image: gcr.io/flogmasters/flog_server:production
           imagePullPolicy: Always
           resources:
             limits:
