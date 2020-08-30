@@ -77,9 +77,9 @@ jobs:
           gcloud container clusters get-credentials $GKE_PROJECT --region asia-east1 --project $GKE_PROJECT
           # kubectl apply -f deploy/production/flog-service.yaml
           # kubectl apply -f deploy/production/flog-ingress.yaml
-          ./kustomize edit set image $REGISTRY_HOSTNAME/$GKE_PROJECT/$IMAGE:${GITHUB_SHA}
-          ./kustomize build . | kubectl apply -f -
-          # kubectl apply -f deploy/production/flog-deployment.yaml
+          # ./kustomize edit set image $REGISTRY_HOSTNAME/$GKE_PROJECT/$IMAGE:${GITHUB_SHA}
+          # ./kustomize build . | kubectl apply -f -
+          kubectl apply -f deploy/production/flog-deployment.yaml
           kubectl rollout status "deployment/$DEPLOYMENT_NAME"
           kubectl get services -o wide
 #       kubectl rollout status "deployment/$DEPLOYMENT_NAME"
