@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: flog-production
-          image: gcr.io/flogmasters/production
+          image: gcr.io/flogmasters/flog_server:production
           imagePullPolicy: Always
           resources:
             limits:
