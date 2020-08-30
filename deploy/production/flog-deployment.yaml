@@ -15,9 +15,10 @@ spec:
       labels:
         app: flog-app-production
     spec:
+      restartPolicy: Always
       containers:
         - name: flog-production
-          image: gcr.io/flogmasters/flog_server:production
+          image: gcr.io/flogmasters/flog_server
           imagePullPolicy: Always
           resources:
             limits:
