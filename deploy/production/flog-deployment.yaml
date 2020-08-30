@@ -16,9 +16,11 @@ spec:
         app: flog-app-production
     spec:
       restartPolicy: Always
+      imagePullSecrets:
+        - name: gcr-io-registry
       containers:
         - name: flog-production
-          image: gcr.io/flogmasters/flog_server
+          image: gcr.io/flogmasters/flog_server:latest
           imagePullPolicy: Always
           resources:
             limits:

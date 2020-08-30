@@ -24,7 +24,7 @@ env:
   IMAGE: flog_server
   IMAGE_TAG: production
   REGISTRY_HOSTNAME: gcr.io
-  DEPLOYMENT_NAME: production
+  DEPLOYMENT_NAME: flog-deployment-production
 
 jobs:
   setup-build-publish-deploy:
@@ -81,5 +81,5 @@ jobs:
           # ./kustomize build . | kubectl apply -f -
           kubectl apply -f deploy/production/flog-deployment.yaml
           kubectl rollout status "deployment/$DEPLOYMENT_NAME"
-          kubectl get services -o wide
+          kubectl get services -o wides
 #       kubectl rollout status "deployment/$DEPLOYMENT_NAME"
