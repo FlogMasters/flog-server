@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flog-deployment-production
+  namespace: flog
+  labels:
+    app: flog-app-production
+spec:
+  selector:
+    matchLabels:
+      app: flog-app-production
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: flog-app-production
+    spec:
+      containers:
+        - name: flog-production
+          image: gcr.io/flogmasters/production
+          imagePullPolicy: Always
+          resources:
+            limits:
+              cpu: 1
+              memory: 256Mi
+            requests:
+              cpu: 1
+              memory: 256Mi
+          ports:
+            - containerPort: 8080
+          env:
+            - name: spring_profiles_active
+              value: production
+            - name: user_timezone
+              value: Asia/Seoul
+          readinessProbe:
+            httpGet:
+              path: /health_check.html
+              port: 8080
+            initialDelaySeconds: 15
+            periodSeconds: 5
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sleep","2"]
+      terminationGracePeriodSeconds: 60

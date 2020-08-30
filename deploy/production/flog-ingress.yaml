@@ -1,0 +1,16 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: flog-ingress-production
+  namespace: flog
+  annotations:
+    ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+    - host: flogkorea.cf #미정
+      http:
+        paths:
+          - path: /
+            backend:
+              serviceName: flog-svc-production
+              servicePort: 80
