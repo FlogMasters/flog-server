@@ -1,4 +1,4 @@
-package com.flogmasters.flog.controller
+package com.flogmasters.flog.common.controller
 
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpStatus

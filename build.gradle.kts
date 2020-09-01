@@ -16,7 +16,7 @@ repositories {
 }
 
 dependencies {
-//    implementation("org.springframework.boot:spring-boot-starter-data-jpa") //이건 DB연동 추후 디비 연동이 된다면 해제할 것
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa") //이건 DB연동 추후 디비 연동이 된다면 해제할 것
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
@@ -24,6 +24,7 @@ dependencies {
     implementation("io.springfox:springfox-swagger-ui:2.9.2")
     implementation("io.springfox:springfox-swagger2:2.9.2")
     implementation ("net.logstash.logback:logstash-logback-encoder:6.3")
+    implementation("com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.0")
 //    implementation("io.sentry:sentry-spring:1.7.28") //센트리 알람 쏠 수 있는 방법 있나...
     runtimeOnly("mysql:mysql-connector-java")
     testImplementation("com.h2database:h2")
