@@ -18,7 +18,7 @@ spec:
       restartPolicy: Always
       containers:
         - name: flog-production
-          image: gcr.io/flogmasters/flog_server:production
+          image: gcr.io/flogmasters/flog_server@sha256:01786ab4d1b1efd9384774f0a05f5b64d1c591b0b3ea2f2aaf72fb04eef36f4f
           imagePullPolicy: Always
           command: ['sh', '-c', 'echo xxx && sleep 6000']
           resources:
@@ -35,6 +35,11 @@ spec:
               value: production
             - name: user_timezone
               value: Asia/Seoul
+            - name: jasypt.encryptor.password
+              valueFrom:
+                secretKeyRef:
+                  name: flog-db
+                  key: password
           readinessProbe:
             httpGet:
               path: /health_check.html
