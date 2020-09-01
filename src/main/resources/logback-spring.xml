@@ -12,10 +12,10 @@
         <appender-ref ref="CONSOLE" />
     </logger>
 
-<!--    <logger name="ch.qos.logback" level="off"/>-->
+    <logger name="ch.qos.logback" level="off"/>
 <!--    <logger name="org.springframework" level="off" additivity="false"/>-->
 <!--    <logger name="org.apache.catalina" level="off" additivity="false"/>-->
-<!--    <logger name="tomcat" level="off" additivity="false"/>-->
+    <logger name="tomcat" level="off" additivity="false"/>
 <!--    <logger name="io.sentry" level="off" additivity="false"/>-->
 <!--    <logger name="org.hibernate" level="off" additivity="false"/>-->
 <!--    <logger name="com.zaxxer.hikari" level="off" additivity="false"/>-->

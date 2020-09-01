@@ -80,6 +80,6 @@ jobs:
           # ./kustomize edit set image $REGISTRY_HOSTNAME/$GKE_PROJECT/$IMAGE:$IMAGE_TAG
           # ./kustomize build . | kubectl apply -f -
           kubectl apply -f deploy/production/flog-deployment.yaml
-          kubectl rollout status "deployment/$DEPLOYMENT_NAME"
+          # kubectl rollout status "deployment/$DEPLOYMENT_NAME"
           kubectl get services -o wides
 #       kubectl rollout status "deployment/$DEPLOYMENT_NAME"
