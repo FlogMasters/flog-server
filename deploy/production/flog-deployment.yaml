@@ -18,7 +18,7 @@ spec:
       restartPolicy: Always
       containers:
         - name: flog-production
-          image: gcr.io/flogmasters/flog_server
+          image: gcr.io/flogmasters/flog_server:production
           imagePullPolicy: Always
           command: ['sh', '-c', 'echo xxx && sleep 6000']
           resources:
