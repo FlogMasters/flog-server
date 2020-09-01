@@ -4,8 +4,6 @@
 name: Kotlin test run
 
 on:
-  push:
-    branches: [ master, stage, production ]
   pull_request:
     branches: [ master, stage, production ]
 
