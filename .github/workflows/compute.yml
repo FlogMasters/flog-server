@@ -80,7 +80,7 @@ jobs:
 #          # ./kustomize edit set image $REGISTRY_HOSTNAME/$GKE_PROJECT/$IMAGE:$IMAGE_TAG
 #          # ./kustomize build . | kubectl apply -f -
 #          kubectl apply -f deploy/production/flog-deployment.yaml
-#          kubectl rollout status "deployment/$DEPLOYMENT_NAME"
+#          kuctl rollout status "deployment/$DEPLOYMENT_NAME"
 #          echo "complete"
 
       - name: Deploy
@@ -88,5 +88,6 @@ jobs:
           gcloud compute instances update-container "$GCE_INSTANCE" \
           --zone "$GKE_ZONE" \
           --container-image "gcr.io/$GCE_PROJECT/$IMAGE:$GITHUB_SHA"
-          --container-env PASSWORD="$ENV_PASSWORD"
+          --container-env "PASSWORD=$ENV_PASSWORD,ACTIVE=production"
+
 #       kubectl rollout status "deployment/$DEPLOYMENT_NAME"
