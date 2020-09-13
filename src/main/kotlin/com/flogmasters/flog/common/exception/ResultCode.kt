@@ -12,5 +12,6 @@ enum class ResultCode(
 
     BAD_REQUEST(HttpStatus.BAD_REQUEST, 400_0000, "Bad Request"),
 
-    INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, 500_0000, "internal_server_error")
+    INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, 500_0000, "internal_server_error"),
+    AUTHORIZATION_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, 500_0001,"authorization_error")
 }

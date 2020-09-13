@@ -2,8 +2,8 @@ package com.flogmasters.flog.common.exception
 
 import java.lang.RuntimeException
 
-class FlogException(
-        val resultCode:ResultCode,
+open class FlogException(
+        open val resultCode:ResultCode,
         override val message:String,
         override val cause:Throwable?
 ):RuntimeException(message,cause){
