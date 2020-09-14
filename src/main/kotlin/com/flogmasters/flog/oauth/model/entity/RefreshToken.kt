@@ -1,5 +1,6 @@
 package com.flogmasters.flog.oauth.model.entity
 
+import com.flogmasters.flog.common.model.User
 import java.time.ZonedDateTime
 import javax.persistence.*
 
@@ -10,7 +11,9 @@ class RefreshToken(
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         val id:Long? = null,
-        val userId:String,
+        @ManyToOne
+        @JoinColumn(name = "userId")
+        val user:User,
         val token:String,
         val expiresIn:Long,
         val lastRefreshToken: String?,

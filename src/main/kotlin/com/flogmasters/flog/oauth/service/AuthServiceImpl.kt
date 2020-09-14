@@ -71,7 +71,7 @@ class AuthServiceImpl(
                 refreshToken = ref.lastRefreshToken
             }
         }
-        val user = userRepository.findByIdOrNull(accessToken.userId) ?: throw FlogAuthException("not found user")
+        val user = userRepository.findByIdOrNull(accessToken.user.id) ?: throw FlogAuthException("not found user")
         val authorizationCode = authorizationCodeRepository.findByUserIdAndConnectedIp(user.id,"not found authorization code")
         authorizationCode.expired = true
         return user
@@ -84,7 +84,7 @@ class AuthServiceImpl(
             accessTokenRepository.save(accessToken)
             throw FlogException("expired token")
         }
-        return userRepository.findByIdOrNull(accessToken.userId) ?: throw FlogAuthException("")
+        return userRepository.findByIdOrNull(accessToken.user.id) ?: throw FlogAuthException("")
     }
 
     private fun checkAndRemakeRefreshToken(token:String): RefreshToken {
@@ -93,7 +93,7 @@ class AuthServiceImpl(
         val nowTime = ZonedDateTime.now()
         return if(expiresTime.plusSeconds(refreshToken.expiresIn)  < nowTime){
             refreshToken.expired = true
-            makeRefreshToken(refreshToken.userId,refreshToken.token, nowTime)
+            makeRefreshToken(refreshToken.user,refreshToken.token, nowTime)
         }else {
             refreshToken
         }
@@ -102,18 +102,18 @@ class AuthServiceImpl(
     private fun makeAccessTokenByAuthorizationCode(token:String):AccessToken{
         val nowTime = ZonedDateTime.now()
         val authorizationCode = authorizationCodeRepository.findByAuthorizationCode(token) ?: throw FlogAuthException("not found authorization code")
-        val refreshToken = makeRefreshToken(authorizationCode.userId,null, nowTime)
-        val accessToken = AccessToken(null, authorizationCode.userId,SecurityUtil.makeToken(authorizationCode.userId), ACCESS_EXPIRES_IN,refreshToken.token,nowTime,false)
+        val refreshToken = makeRefreshToken(authorizationCode.user,null, nowTime)
+        val accessToken = AccessToken(null, authorizationCode.user,SecurityUtil.makeToken(authorizationCode.user.id), ACCESS_EXPIRES_IN,refreshToken.token,nowTime,false)
         return accessTokenRepository.save(accessToken)
     }
     private fun makeAccessTokenByRefreshToken(refreshToken:String):AccessToken{
         val nowTime = ZonedDateTime.now()
         val checkingRefreshToken = checkAndRemakeRefreshToken(refreshToken)
-        val accessToken = AccessToken(null, checkingRefreshToken.userId,SecurityUtil.makeToken(checkingRefreshToken.userId), ACCESS_EXPIRES_IN,checkingRefreshToken.token,nowTime,false)
+        val accessToken = AccessToken(null, checkingRefreshToken.user,SecurityUtil.makeToken(checkingRefreshToken.user.id), ACCESS_EXPIRES_IN,checkingRefreshToken.token,nowTime,false)
         return accessTokenRepository.save(accessToken)
     }
-    private fun makeRefreshToken(userId:String,previousToken:String?, nowTime:ZonedDateTime):RefreshToken {
-        val newRefreshToken = RefreshToken(null,userId,SecurityUtil.makeToken(userId),REFRESH_EXPIRES_IN,previousToken, nowTime,false)
+    private fun makeRefreshToken(user:User,previousToken:String?, nowTime:ZonedDateTime):RefreshToken {
+        val newRefreshToken = RefreshToken(null,user,SecurityUtil.makeToken(user.id),REFRESH_EXPIRES_IN,previousToken, nowTime,false)
         return refreshTokenRepository.save(newRefreshToken)
     }
 
