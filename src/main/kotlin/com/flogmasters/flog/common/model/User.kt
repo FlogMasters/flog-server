@@ -1,10 +1,11 @@
 package com.flogmasters.flog.common.model
 
 import com.fasterxml.jackson.annotation.JsonIgnore
-import javax.persistence.*
+import javax.persistence.Entity
+import javax.persistence.Id
+import javax.persistence.Column
 
 @Entity
-@Table(name = "dmghdfmdg")
 class User(
 
         @Id
