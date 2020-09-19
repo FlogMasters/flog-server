@@ -5,6 +5,7 @@ plugins {
     id("io.spring.dependency-management") version "1.0.10.RELEASE"
     kotlin("jvm") version "1.3.72"
     kotlin("plugin.spring") version "1.3.72"
+    kotlin("plugin.jpa") version "1.3.72"
 }
 
 group = "com.flogmasters"
@@ -27,7 +28,7 @@ dependencies {
     implementation("com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.0")
 //    implementation("io.sentry:sentry-spring:1.7.28") //센트리 알람 쏠 수 있는 방법 있나...
     runtimeOnly("mysql:mysql-connector-java")
-    testImplementation("com.h2database:h2")
+    implementation("com.h2database:h2")
     testImplementation("org.springframework.boot:spring-boot-starter-test") {
         exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
     }

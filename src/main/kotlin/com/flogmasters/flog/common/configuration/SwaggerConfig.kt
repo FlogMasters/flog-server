@@ -1,8 +1,5 @@
 package com.flogmasters.flog.common.configuration
 
-
-import com.fasterxml.jackson.databind.ObjectMapper
-
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.web.bind.annotation.RequestMethod
@@ -36,7 +33,7 @@ class SwaggerConfig{
                 .useDefaultResponseMessages(false)
                 .globalResponseMessage(RequestMethod.GET,globalResponseMessage())
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.flogmasters.flog.common.controller"))
+                .apis(RequestHandlerSelectors.basePackage("com.flogmasters.flog"))
                 .paths(PathSelectors.any())
                 .build()
     }
