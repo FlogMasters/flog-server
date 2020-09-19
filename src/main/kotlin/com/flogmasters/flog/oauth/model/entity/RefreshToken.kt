@@ -20,6 +20,7 @@ class RefreshToken(
         @JsonIgnore
         val lastRefreshToken: String?,
         val createdAt:ZonedDateTime,
+        val connectedIp:String,
         @JsonIgnore
         var expired:Boolean
 )

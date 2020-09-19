@@ -3,6 +3,7 @@ package com.flogmasters.flog.oauth.controller
 import com.flogmasters.flog.common.exception.ResultCode
 import com.flogmasters.flog.common.model.User
 import com.flogmasters.flog.common.model.response.Response
+import com.flogmasters.flog.oauth.exception.FlogAuthException
 import com.flogmasters.flog.oauth.model.entity.AccessToken
 import com.flogmasters.flog.oauth.model.entity.AuthorizationCode
 import com.flogmasters.flog.oauth.model.request.IssueTokenRequest
@@ -41,8 +42,17 @@ class AuthController(
         return Response(ResultCode.SUCCESS, true, authService.checkingAccessToken(token))
     }
 
-    @GetMapping("/logout")
+    @GetMapping("/user/logout")
     fun logout(@RequestHeader("Authorization") token:String):Response<User>{
-        return Response(ResultCode.SUCCESS, true, authService.logout(token))
+        val userToken = checkBearerToken(token.toLowerCase())
+        return Response(ResultCode.SUCCESS, true, authService.logout(userToken))
+    }
+
+    private fun checkBearerToken(token:String):String{
+        if(token.startsWith("bearer")){
+            return token.replace("bearer","").trim()
+        }else
+            throw FlogAuthException("not bearer token")
+
     }
 }

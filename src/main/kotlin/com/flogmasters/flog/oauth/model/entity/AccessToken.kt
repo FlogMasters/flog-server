@@ -20,5 +20,6 @@ class AccessToken(
         @JoinColumn(name = "lastRefreshToken")
         val lastRefreshToken:RefreshToken,
         val createdAt:ZonedDateTime,
+        val connectedIp:String,
         var expired:Boolean
 )

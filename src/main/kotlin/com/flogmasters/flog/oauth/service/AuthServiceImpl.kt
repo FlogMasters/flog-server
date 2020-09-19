@@ -39,8 +39,7 @@ class AuthServiceImpl(
             throw FlogAuthException("password don't correct")
         }
         val code = securityUtil.makeToken(user.id)
-        val ip = FlogContext.getFlogHeader().headerMap?.get("client-ip") ?: throw FlogAuthException("not found host")
-        val authorizationCode = AuthorizationCode(null, user,ip,code,ZonedDateTime.now(),false)
+        val authorizationCode = AuthorizationCode(null, user,getClientIp(),code,ZonedDateTime.now(),false)
         authorizationCodeRepository.save(authorizationCode)
         return authorizationCode
     }
@@ -60,13 +59,13 @@ class AuthServiceImpl(
 
     @Transactional
     override fun logout(token:String):User{
-        val accessToken = accessTokenRepository.findByTokenAndExpired(token,false) ?: throw FlogAuthException("not found access token")
+        val accessToken = accessTokenRepository.findByTokenAndConnectedIpAndExpired(token,getClientIp(),false) ?: throw FlogAuthException("not found access token")
         accessToken.expired = true
         var hasRefreshToken = true
         var refreshToken = accessToken.lastRefreshToken
         //TODO: 개선작업필요
         while(hasRefreshToken){
-            val ref = refreshTokenRepository.findByTokenAndExpired(refreshToken.token, false)
+            val ref = refreshTokenRepository.findByTokenAndConnectedIpAndExpired(refreshToken.token, getClientIp(),false)
             if(ref != null){
                 ref.expired = true
                 hasRefreshToken = true
@@ -78,14 +77,13 @@ class AuthServiceImpl(
             }
         }
         val user = userRepository.findByIdOrNull(accessToken.user.id) ?: throw FlogAuthException("not found user")
-        val ip = FlogContext.getFlogHeader().headerMap?.get("client-ip") ?: throw FlogAuthException("not found host")
-        val authorizationCode = authorizationCodeRepository.findByUserIdAndConnectedIp(user.id,ip)
+        val authorizationCode = authorizationCodeRepository.findByUserIdAndConnectedIp(user.id,getClientIp())
         authorizationCode.expired = true
         return user
     }
 
     override fun checkingAccessToken(token:String):User {
-        val accessToken = accessTokenRepository.findByTokenAndExpired(token, false) ?: throw FlogAuthException("not found Token")
+        val accessToken = accessTokenRepository.findByTokenAndConnectedIpAndExpired(token,getClientIp(), false) ?: throw FlogAuthException("not found Token")
         if(isExpiredAccessToken(accessToken)){
             accessToken.expired = true
             accessTokenRepository.save(accessToken)
@@ -95,7 +93,7 @@ class AuthServiceImpl(
     }
 
     private fun checkAndRemakeRefreshToken(token:String): RefreshToken {
-        val refreshToken = refreshTokenRepository.findByTokenAndExpired(token, false) ?: throw FlogAuthException("not found refresh token")
+        val refreshToken = refreshTokenRepository.findByTokenAndConnectedIpAndExpired(token,getClientIp(), false) ?: throw FlogAuthException("not found refresh token")
         val expiresTime = refreshToken.createdAt
         val nowTime = ZonedDateTime.now()
         return if(expiresTime.plusSeconds(refreshToken.expiresIn)  < nowTime){
@@ -110,17 +108,23 @@ class AuthServiceImpl(
         val nowTime = ZonedDateTime.now()
         val authorizationCode = authorizationCodeRepository.findByAuthorizationCode(token) ?: throw FlogAuthException("not found authorization code")
         val refreshToken = makeRefreshToken(authorizationCode.user,null, nowTime)
-        val accessToken = AccessToken(null, authorizationCode.user,SecurityUtil.makeToken(authorizationCode.user.id), accessTokenExpiresIn.toLong(),refreshToken,nowTime,false)
+        val accessToken = AccessToken(null, authorizationCode.user,SecurityUtil.makeToken(authorizationCode.user.id), accessTokenExpiresIn.toLong(),refreshToken,nowTime,getClientIp(),false)
         return accessTokenRepository.save(accessToken)
     }
     private fun makeAccessTokenByRefreshToken(refreshToken:String):AccessToken{
         val nowTime = ZonedDateTime.now()
         val checkingRefreshToken = checkAndRemakeRefreshToken(refreshToken)
-        val accessToken = AccessToken(null, checkingRefreshToken.user,SecurityUtil.makeToken(checkingRefreshToken.user.id), accessTokenExpiresIn.toLong(),checkingRefreshToken,nowTime,false)
-        return accessTokenRepository.save(accessToken)
+        val existedAccessToken = accessTokenRepository.findByConnectedIpAndExpired(getClientIp(), false)
+        return if(existedAccessToken ==null){
+            val accessToken = AccessToken(null, checkingRefreshToken.user,SecurityUtil.makeToken(checkingRefreshToken.user.id), accessTokenExpiresIn.toLong(),checkingRefreshToken,nowTime,getClientIp(),false)
+            accessTokenRepository.save(accessToken)
+        }else {
+            existedAccessToken
+        }
+
     }
     private fun makeRefreshToken(user:User,previousToken:String?, nowTime:ZonedDateTime):RefreshToken {
-        val newRefreshToken = RefreshToken(null,user,SecurityUtil.makeToken(user.id),refreshTokenExpiresIn.toLong(),previousToken, nowTime,false)
+        val newRefreshToken = RefreshToken(null,user,SecurityUtil.makeToken(user.id),refreshTokenExpiresIn.toLong(),previousToken, nowTime,getClientIp(),false)
         return refreshTokenRepository.save(newRefreshToken)
     }
 
@@ -128,6 +132,10 @@ class AuthServiceImpl(
         val time = accessToken.createdAt
         val expiredTime = time.plusSeconds(accessToken.expiresIn)
         return expiredTime <= ZonedDateTime.now()
+    }
+
+    private fun getClientIp(): String {
+        return FlogContext.getFlogHeader().headerMap?.get("client-ip") ?: throw FlogException("client not found")
     }
 
 }
