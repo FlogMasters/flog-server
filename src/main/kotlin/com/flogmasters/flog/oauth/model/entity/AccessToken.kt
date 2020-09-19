@@ -1,5 +1,6 @@
 package com.flogmasters.flog.oauth.model.entity
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.databind.annotation.JsonNaming
 import com.flogmasters.flog.common.model.User
 import java.time.ZonedDateTime
@@ -15,7 +16,9 @@ class AccessToken(
         val user: User,
         val token:String,
         val expiresIn:Long,
-        val lastRefreshToken:String,
+        @ManyToOne
+        @JoinColumn(name = "lastRefreshToken")
+        val lastRefreshToken:RefreshToken,
         val createdAt:ZonedDateTime,
         var expired:Boolean
 )

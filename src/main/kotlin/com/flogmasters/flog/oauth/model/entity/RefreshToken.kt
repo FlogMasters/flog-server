@@ -1,5 +1,6 @@
 package com.flogmasters.flog.oauth.model.entity
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import com.flogmasters.flog.common.model.User
 import java.time.ZonedDateTime
 import javax.persistence.*
@@ -16,8 +17,10 @@ class RefreshToken(
         val user:User,
         val token:String,
         val expiresIn:Long,
+        @JsonIgnore
         val lastRefreshToken: String?,
         val createdAt:ZonedDateTime,
+        @JsonIgnore
         var expired:Boolean
 )
 

@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler
 @ControllerAdvice
 class ControllerAdvice{
 
-
     @ExceptionHandler(Exception::class)
     private fun handleVisionRunTimeException(exception: Exception): ResponseEntity<Response<*>>{
         return makeResponseException(exception)

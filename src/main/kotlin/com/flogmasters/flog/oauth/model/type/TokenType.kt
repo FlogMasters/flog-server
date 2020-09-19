@@ -3,8 +3,8 @@ package com.flogmasters.flog.oauth.model.type
 enum class TokenType(
         val type:String
 ){
-    AUTHORIZATION_CODE("authorization_code"),
-    REFRESH_TOKEN("refresh_token");
+    AUTHORIZATION_CODE("authorizationCode"),
+    REFRESH_TOKEN("refreshToken");
 
     companion object{
         private val LOOK_UP:MutableMap<String, TokenType> = mutableMapOf()
