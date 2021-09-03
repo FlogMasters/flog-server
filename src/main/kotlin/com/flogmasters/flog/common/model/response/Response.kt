@@ -12,5 +12,5 @@ class Response<T>(
     val data:T
 ){
     constructor(resultCode:ResultCode, isSuccess: Boolean, data:T): this(resultCode.code, resultCode.defaultMessage, isSuccess, data)
-
+    constructor(resultCode: ResultCode, data: T): this(resultCode, true, data)
 }

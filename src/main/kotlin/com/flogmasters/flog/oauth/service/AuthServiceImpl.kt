@@ -16,6 +16,7 @@ import com.flogmasters.flog.oauth.repository.AccessTokenRepository
 import com.flogmasters.flog.oauth.repository.AuthorizationCodeRepository
 import com.flogmasters.flog.oauth.repository.RefreshTokenRepository
 import com.flogmasters.flog.oauth.util.SecurityUtil
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
@@ -33,6 +34,7 @@ class AuthServiceImpl(
         @Value("\${token.refresh-token.expires}") private val refreshTokenExpiresIn:String
 ):AuthService{
     // TODO: IP별로 다른 로그인시 구현 필요
+
     override fun login(loginRequest: LoginRequest): AuthorizationCode {
         val user = userRepository.findByIdOrNull(loginRequest.id) ?: throw FlogAuthException("not found user")
         if(user.password != loginRequest.password){
